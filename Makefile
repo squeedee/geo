@@ -5,7 +5,7 @@ GOLANGCILINT ?= $(BIN_DIR)/golangci-lint
 GOLANGCILINT_VERSION ?= 1.61.0
 CLI ?= $(BUILD_DIR)/geo
 
-# OPEN_WEATHER_MAP_API_KEY ?= not-set
+# OPEN_WEATHER_API_KEY ?= not-set
 
 SRC_FILES=$(shell find . -type f -name '*.go')
 
