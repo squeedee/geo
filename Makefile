@@ -5,8 +5,6 @@ GOLANGCILINT ?= $(BIN_DIR)/golangci-lint
 GOLANGCILINT_VERSION ?= 1.61.0
 CLI ?= $(BUILD_DIR)/geo
 
-# OPEN_WEATHER_API_KEY ?= not-set
-
 SRC_FILES=$(shell find . -type f -name '*.go')
 
 $(BIN_DIR):
@@ -38,7 +36,12 @@ $(CLI): $(SRC_FILES)
 test: lint ## Test runs all go tests. Deliberately runs every test, no caching or source file checks.
 	go test ./... -count=1
 
-e2e: clean-fixtures test ## runs test with openweathermap API calls enabled. Recommend committing any changes to the "cassettes" directory after running
+#e2e: clean-fixtures test ## runs test with openweathermap API calls enabled. Recommend committing any changes to the "cassettes" directory after running
+
+e2e: ## runs test with openweathermap API calls enabled.
+	go test ./test/integration/... -count=1 -tags=e2e
+
+test-all: test e2e
 
 all: dependencies $(CLI)
 
@@ -48,6 +51,6 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -rf $(OUT_DIR)
 
-.PHONY: clean-fixtures
-clean-fixtures: ## Remove VCR files for enemy/e2e tests
-	find . -iname "*.yaml" | grep "cassettes\/[a-zA-Z0-9-]*\.yaml" | xargs -n1 rm
+#.PHONY: clean-fixtures
+#clean-fixtures: ## Remove VCR files for enemy/e2e tests
+#	find . -iname "*.yaml" | grep "cassettes\/[a-zA-Z0-9-]*\.yaml" | xargs -n1 rm
