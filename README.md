@@ -15,7 +15,7 @@ Install dependencies:
 Run:
 
 ```shell
-make build
+make all
 ```
 
 # Usage
