@@ -39,14 +39,14 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 		ExpectOutput []string
 		ExpectError  bool
 	}{
-		"no arguments provided -> exit code 1, help user and display usage": {
+		"'geo', no arguments provided -> exit code 1, help user and display usage": {
 			ExpectOutput: []string{
 				"No location arguments provided, please provide at least one location name, ZIP or Postal Code.",
 				usageMessage,
 			},
 			ExpectError: true,
 		},
-		"geo -h -> display usage": {
+		"'geo -h', help flag -> displays usage": {
 			Args: []string{
 				"-h",
 			},
@@ -54,7 +54,7 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 				usageMessage,
 			},
 		},
-		"geo 23228 -> Henrico, VA": {
+		"'geo 23228', valid zip code -> Henrico, VA": {
 			Args: []string{"23228"},
 			ExpectOutput: []string{
 				"'23228' results:",
@@ -62,7 +62,7 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 				"  Lat,Lon: 37.463800, -77.398000",
 			},
 		},
-		"geo 99999 -> Henrico, VA": {
+		"'geo 99999', invalid zip code -> exit code 1, display not found message": {
 			Args: []string{"99999"},
 			ExpectOutput: []string{
 				"'99999' results:",
@@ -70,7 +70,7 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 			},
 			ExpectError: true,
 		},
-		"geo 'Henrico, VA' -> loc(Henrico, VA)": {
+		"'geo \"Henrico, VA\"', valid place name -> loc(Henrico, VA)": {
 			Args: []string{"Henrico, VA"},
 			ExpectOutput: []string{
 				"'Henrico, VA' results:",
@@ -78,7 +78,7 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 				"  Lat,Lon: 37.495702, -77.335257",
 			},
 		},
-		"geo 'San José, CA' (special characters) -> loc(San José, CA)": {
+		"'geo \"San José, CA\"', special characters -> loc(San José, CA)": {
 			Args: []string{"San José, CA"},
 			ExpectOutput: []string{
 				"'San José, CA' results:",
@@ -86,7 +86,7 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 				"Lat,Lon: 37.336166, -121.890591",
 			},
 		},
-		"geo 'not-a-place, NY' -> none found": {
+		"'geo \"not-a-place, NY\"', invalid place -> exit code 1, display not found message": {
 			Args: []string{"not-a-place, NY"},
 			ExpectOutput: []string{
 				"'not-a-place, NY' results:",
@@ -94,7 +94,7 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 			},
 			ExpectError: true,
 		},
-		"geo '壚靁縅-lalala' (special characters) -> none found": {
+		"'geo \"壚靁縅-lalala\"', invalid place and special characters -> exit code 1, display not found message": {
 			Args: []string{"壚靁縅-lalala"},
 			ExpectOutput: []string{
 				"'壚靁縅-lalala' results:",
@@ -102,7 +102,7 @@ func TestIntegrationWithWorkingKey(t *testing.T) {
 			},
 			ExpectError: true,
 		},
-		"Test layout": {
+		"Test text layout": {
 			Args: []string{"Henrico, VA", "10001", "Seattle, WA"},
 			ExpectOutput: []string{
 				"'Henrico, VA' results:\n",
