@@ -1,3 +1,5 @@
+![Tests](https://github.com/squeedee/geo/actions/workflows/ci.yml/badge.svg)
+
 # geo
 
 A simple CLI for fetching a place's geolocation data.
