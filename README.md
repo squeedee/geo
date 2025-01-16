@@ -8,6 +8,7 @@ Install dependencies:
 
 * [Golang 1.23.1 or higher.](https://go.dev/dl/) 
 * [make](https://www.gnu.org/software/make/manual/make.html)  
+* [curl](https://curl.se/)
 
 Run:
 
