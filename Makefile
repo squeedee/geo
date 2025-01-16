@@ -34,12 +34,12 @@ $(CLI): $(SRC_FILES)
 
 
 test: lint ## Test runs all go tests. Deliberately runs every test, no caching or source file checks.
-	go test ./... -count=1
+	go test ./... -count=1 -v
 
 #e2e: clean-fixtures test ## runs test with openweathermap API calls enabled. Recommend committing any changes to the "cassettes" directory after running
 
 e2e: ## runs test with openweathermap API calls enabled.
-	go test ./test/integration/... -count=1 -tags=e2e
+	go test ./test/integration/... -count=1 -tags=e2e -v
 
 test-all: test e2e
 

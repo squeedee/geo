@@ -31,52 +31,63 @@ type DirectGeocoding struct {
 
 // LocationByName returns the coordinates of a named location.
 // see https://openweathermap.org/api/geocoding-api#direct_name
-func (g *DirectGeocoding) LocationByName(name string) ([]NameResult, error) {
+func (g *DirectGeocoding) LocationByName(name string) ([]NameResult, int, error) {
 	uri := g.buildNameLookupUri(name)
 
 	result, err := http.Get(uri)
-	if err != nil {
-		return nil, err
+
+	var statusCode = 0
+	if result != nil {
+		statusCode = result.StatusCode
+	}
+
+	if err != nil || result == nil || statusCode < 200 || statusCode >= 300 {
+		return nil, statusCode, err
 	}
 
 	resultBody, err := io.ReadAll(result.Body)
 	if err != nil {
-		return nil, err
+		return nil, statusCode, err
 	}
 
 	var locations []NameResult
 	err = json.Unmarshal(resultBody, &locations)
 	if err != nil {
-		return nil, err
+		return nil, statusCode, err
 	}
 
-	return locations, nil
+	return locations, statusCode, nil
 }
 
-func (g *DirectGeocoding) LocationByZip(zip string) (*ZipResult, error) {
+func (g *DirectGeocoding) LocationByZip(zip string) (*ZipResult, int, error) {
 	uri := g.buildZipLookupUri(zip)
 
 	result, err := http.Get(uri)
-	if err != nil {
-		return nil, err
+	var statusCode = 0
+	if result != nil {
+		statusCode = result.StatusCode
+	}
+
+	if err != nil || result == nil {
+		return nil, statusCode, err
 	}
 
 	resultBody, err := io.ReadAll(result.Body)
 	if err != nil {
-		return nil, err
+		return nil, statusCode, err
 	}
 
-	location := &ZipResult{} // todo: refactor by passing this in
+	location := &ZipResult{}
 	err = json.Unmarshal(resultBody, location)
 	if err != nil {
-		return nil, err
+		return nil, statusCode, err
 	}
 
 	if location.Zip == "" {
-		return nil, fmt.Errorf("zip '%s' not found", zip)
+		return nil, statusCode, fmt.Errorf("zip '%s' not found", zip)
 	}
 
-	return location, nil
+	return location, statusCode, nil
 }
 
 func (g *DirectGeocoding) buildNameLookupUri(name string) string {

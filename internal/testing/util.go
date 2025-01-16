@@ -53,3 +53,8 @@ func (s *OutputMatcher) MatchText(t TestingT, text string) {
 	}
 	s.remainder = s.remainder[pos+len(text):]
 }
+
+func StrPtr(s string) *string {
+	return &s
+
+}
